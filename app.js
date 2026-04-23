@@ -10,7 +10,9 @@ const store = {
   route: parseRoute(),
   flash: "",
   activeUserTab: "profile",
+  activeMerchantTab: "payment",
   activeKycId: null,
+  activeModal: null,
   auditForm: {
     status: "approved",
     remark: "",
@@ -45,6 +47,281 @@ const store = {
       monthlyCashInLimit: 500000,
       monthlyPayoutLimit: 500000,
       note: "增强账户，按系统规则或后台受控操作生效。",
+    },
+  ],
+  merchants: [
+    {
+      id: "M10001",
+      code: "Ptpeso",
+      name: "Ptpeso",
+      contactName: "Ptpeso",
+      contactPhone: "9957355712",
+      paymentAccountBalance: 302806.12,
+      flows: [
+        { id: "F001", type: "业务支出", channel: "-", amount: -1515, proof: "-", payeeAccount: "-", createdAt: "2026-04-17 15:04:05", note: "-", balance: 302806.12 },
+        { id: "F002", type: "结算入账", channel: "-", amount: 2035, proof: "-", payeeAccount: "-", createdAt: "2026-04-17 14:30:59", note: "-", balance: 304321.12 },
+        { id: "F003", type: "结算入账", channel: "-", amount: 2035, proof: "-", payeeAccount: "-", createdAt: "2026-04-17 14:24:52", note: "-", balance: 302286.12 },
+      ],
+    },
+  ],
+  applicationRequests: [
+    {
+      id: "AR202604230001",
+      type: "recharge",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 1000,
+      tradeDate: "2026-04-23 14:56:33",
+      initiator: "starxu",
+      initiatedAt: "2026-04-23 14:57:16",
+      currentStatus: "pending_initial",
+      latestProcessedAt: "2026-04-23 14:57:16",
+      reasonSummary: "-",
+      initiation: {
+        proofLabel: "交易证明001",
+        channel: "Bank of PH",
+        account: "09171234567",
+        remark: "样例充值申请",
+      },
+      initialReview: {
+        status: "pending",
+        reviewer: "-",
+        reviewedAt: "-",
+        remark: "-",
+        receiptProofLabel: "-",
+      },
+      finalReview: {
+        status: "pending",
+        reviewer: "-",
+        reviewedAt: "-",
+        remark: "-",
+      },
+      finalResult: {
+        effectiveStatus: "pending",
+        effectiveAt: "-",
+        failureReason: "-",
+      },
+      reviewLogs: [
+        { time: "2026-04-23 14:57:16", role: "发起人", operator: "starxu", action: "提交申请", remark: "提交充值申请，进入待初审" },
+      ],
+    },
+    {
+      id: "AR202604220002",
+      type: "withdraw",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 5000,
+      tradeDate: "2026-04-22 11:35:26",
+      initiator: "finance01",
+      initiatedAt: "2026-04-22 11:38:02",
+      currentStatus: "initial_pass_pending_final",
+      latestProcessedAt: "2026-04-22 12:06:41",
+      reasonSummary: "-",
+      initiation: {
+        proofLabel: "交易证明002",
+        channel: "GCash",
+        account: "09189998888",
+        remark: "提现申请",
+      },
+      initialReview: {
+        status: "approved",
+        reviewer: "财务A",
+        reviewedAt: "2026-04-22 12:06:41",
+        remark: "信息核对无误",
+        receiptProofLabel: "收款凭证001",
+      },
+      finalReview: {
+        status: "pending",
+        reviewer: "-",
+        reviewedAt: "-",
+        remark: "-",
+      },
+      finalResult: {
+        effectiveStatus: "pending",
+        effectiveAt: "-",
+        failureReason: "-",
+      },
+      reviewLogs: [
+        { time: "2026-04-22 11:38:02", role: "发起人", operator: "finance01", action: "提交申请", remark: "提交提现申请，进入待初审" },
+        { time: "2026-04-22 12:06:41", role: "初审", operator: "财务A", action: "初审通过", remark: "上传凭证后提交复审" },
+      ],
+    },
+    {
+      id: "AR202604220003",
+      type: "recharge",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 3000,
+      tradeDate: "2026-04-22 09:18:26",
+      initiator: "finance01",
+      initiatedAt: "2026-04-22 09:20:03",
+      currentStatus: "final_pass_effective",
+      latestProcessedAt: "2026-04-22 10:02:15",
+      reasonSummary: "-",
+      initiation: {
+        proofLabel: "交易证明003",
+        channel: "Bank of PH",
+        account: "09080001111",
+        remark: "已生效充值",
+      },
+      initialReview: {
+        status: "approved",
+        reviewer: "财务B",
+        reviewedAt: "2026-04-22 09:33:11",
+        remark: "初审通过",
+        receiptProofLabel: "收款凭证002",
+      },
+      finalReview: {
+        status: "approved",
+        reviewer: "老板A",
+        reviewedAt: "2026-04-22 09:50:42",
+        remark: "复审通过",
+      },
+      finalResult: {
+        effectiveStatus: "effective",
+        effectiveAt: "2026-04-22 10:02:15",
+        failureReason: "-",
+      },
+      reviewLogs: [
+        { time: "2026-04-22 09:20:03", role: "发起人", operator: "finance01", action: "提交申请", remark: "提交充值申请，进入待初审" },
+        { time: "2026-04-22 09:33:11", role: "初审", operator: "财务B", action: "初审通过", remark: "上传收款凭证后进入复审" },
+        { time: "2026-04-22 09:50:42", role: "复审", operator: "老板A", action: "复审通过", remark: "进入生效执行" },
+        { time: "2026-04-22 10:02:15", role: "系统", operator: "System", action: "执行成功", remark: "商户余额已更新" },
+      ],
+    },
+    {
+      id: "AR202604220004",
+      type: "withdraw",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 8000,
+      tradeDate: "2026-04-22 08:12:26",
+      initiator: "ops01",
+      initiatedAt: "2026-04-22 08:16:03",
+      currentStatus: "final_return_pending_initial",
+      latestProcessedAt: "2026-04-22 09:12:33",
+      reasonSummary: "复审打回：收款凭证与申请金额不一致",
+      initiation: {
+        proofLabel: "交易证明004",
+        channel: "Bank of PH",
+        account: "09176667777",
+        remark: "待补材料",
+      },
+      initialReview: {
+        status: "approved",
+        reviewer: "财务A",
+        reviewedAt: "2026-04-22 08:45:21",
+        remark: "已提交复审",
+        receiptProofLabel: "收款凭证003",
+      },
+      finalReview: {
+        status: "returned",
+        reviewer: "老板A",
+        reviewedAt: "2026-04-22 09:12:33",
+        remark: "收款凭证与申请金额不一致",
+      },
+      finalResult: {
+        effectiveStatus: "pending",
+        effectiveAt: "-",
+        failureReason: "-",
+      },
+      reviewLogs: [
+        { time: "2026-04-22 08:16:03", role: "发起人", operator: "ops01", action: "提交申请", remark: "提交提现申请，进入待初审" },
+        { time: "2026-04-22 08:45:21", role: "初审", operator: "财务A", action: "初审通过", remark: "已提交复审" },
+        { time: "2026-04-22 09:12:33", role: "复审", operator: "老板A", action: "复审打回", remark: "收款凭证与申请金额不一致" },
+      ],
+    },
+    {
+      id: "AR202604220005",
+      type: "withdraw",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 999999,
+      tradeDate: "2026-04-22 07:20:16",
+      initiator: "ops02",
+      initiatedAt: "2026-04-22 07:22:03",
+      currentStatus: "final_pass_failed",
+      latestProcessedAt: "2026-04-22 08:05:45",
+      reasonSummary: "商户账户余额不足，执行失败",
+      initiation: {
+        proofLabel: "交易证明005",
+        channel: "GCash",
+        account: "09173334444",
+        remark: "演示生效失败",
+      },
+      initialReview: {
+        status: "approved",
+        reviewer: "财务B",
+        reviewedAt: "2026-04-22 07:40:21",
+        remark: "初审通过",
+        receiptProofLabel: "收款凭证004",
+      },
+      finalReview: {
+        status: "approved",
+        reviewer: "老板A",
+        reviewedAt: "2026-04-22 07:55:10",
+        remark: "复审通过",
+      },
+      finalResult: {
+        effectiveStatus: "failed",
+        effectiveAt: "-",
+        failureReason: "商户账户余额不足，执行失败",
+      },
+      reviewLogs: [
+        { time: "2026-04-22 07:22:03", role: "发起人", operator: "ops02", action: "提交申请", remark: "提交提现申请，进入待初审" },
+        { time: "2026-04-22 07:40:21", role: "初审", operator: "财务B", action: "初审通过", remark: "已提交复审" },
+        { time: "2026-04-22 07:55:10", role: "复审", operator: "老板A", action: "复审通过", remark: "进入生效执行" },
+        { time: "2026-04-22 08:05:45", role: "系统", operator: "System", action: "执行失败", remark: "商户账户余额不足，执行失败" },
+      ],
+    },
+    {
+      id: "AR202604220006",
+      type: "recharge",
+      merchantId: "M10001",
+      merchantCode: "Ptpeso",
+      merchantName: "Ptpeso",
+      amount: 12000,
+      tradeDate: "2026-04-22 13:20:10",
+      initiator: "ops03",
+      initiatedAt: "2026-04-22 13:22:03",
+      currentStatus: "initial_pass_pending_final",
+      latestProcessedAt: "2026-04-22 14:18:52",
+      reasonSummary: "-",
+      initiation: {
+        proofLabel: "交易证明006",
+        channel: "Bank of PH",
+        account: "09175556666",
+        remark: "多轮审核演示",
+      },
+      initialReview: {
+        status: "approved",
+        reviewer: "财务C",
+        reviewedAt: "2026-04-22 14:18:52",
+        remark: "补齐凭证后再次提交复审",
+        receiptProofLabel: "收款凭证006-B",
+      },
+      finalReview: {
+        status: "returned",
+        reviewer: "老板A",
+        reviewedAt: "2026-04-22 13:58:16",
+        remark: "首轮打回：凭证金额备注不清晰",
+      },
+      finalResult: {
+        effectiveStatus: "pending",
+        effectiveAt: "-",
+        failureReason: "-",
+      },
+      reviewLogs: [
+        { time: "2026-04-22 13:22:03", role: "发起人", operator: "ops03", action: "提交申请", remark: "提交充值申请，进入待初审" },
+        { time: "2026-04-22 13:36:18", role: "初审", operator: "财务A", action: "初审通过", remark: "上传收款凭证006-A，进入复审" },
+        { time: "2026-04-22 13:58:16", role: "复审", operator: "老板A", action: "复审打回", remark: "首轮打回：凭证金额备注不清晰" },
+        { time: "2026-04-22 14:18:52", role: "初审", operator: "财务C", action: "再次初审通过", remark: "重新上传收款凭证006-B，等待复审" },
+      ],
     },
   ],
   users: [
@@ -215,7 +492,11 @@ const store = {
 const routes = {
   dashboard: { title: "首页信息", crumbs: ["首页信息"] },
   merchantList: { title: "商户管理", crumbs: ["商户管理", "商户列表"] },
+  merchantDetail: { title: "商户详情", crumbs: ["商户管理", "商户详情"] },
+  merchantApplicationList: { title: "申请记录", crumbs: ["商户管理", "商户详情", "申请记录"] },
   rechargeList: { title: "交易管理", crumbs: ["交易管理", "充值列表"] },
+  initialReviewList: { title: "审核管理", crumbs: ["审核管理", "初审列表"] },
+  finalReviewList: { title: "审核管理", crumbs: ["审核管理", "复审列表"] },
   walletLimitConfig: { title: "系统管理", crumbs: ["系统管理", "用户钱包限额配置"] },
   userList: { title: "用户管理", crumbs: ["用户管理", "用户管理"] },
   kycAudit: { title: "用户管理", crumbs: ["用户管理", "用户认证审核管理"] },
@@ -231,6 +512,12 @@ function parseRoute() {
   const parts = pathPart.split("/").filter(Boolean);
   if (parts[0] === "users" && parts[1]) {
     return { name: "userDetail", params: { userId: parts[1] } };
+  }
+  if (parts[0] === "merchant" && parts[1] && parts[2] === "applications") {
+    return { name: "merchantApplicationList", params: { merchantId: parts[1] } };
+  }
+  if (parts[0] === "merchant" && parts[1]) {
+    return { name: "merchantDetail", params: { merchantId: parts[1] } };
   }
   if (parts[0] === "kyc") {
     return { name: "kycAudit", params: {} };
@@ -254,6 +541,67 @@ function getLevelClass(level) {
 
 function getUser(userId) {
   return store.users.find((user) => user.id === userId) || store.users[0];
+}
+
+function getMerchant(merchantId) {
+  return store.merchants.find((merchant) => merchant.id === merchantId) || store.merchants[0];
+}
+
+function getMerchantApplications(merchantId) {
+  return store.applicationRequests.filter((item) => item.merchantId === merchantId);
+}
+
+function getApplication(applicationId) {
+  return store.applicationRequests.find((item) => item.id === applicationId);
+}
+
+function getApplicationTypeLabel(type) {
+  return type === "withdraw" ? "提现" : "充值";
+}
+
+function getApplicationStatusLabel(status) {
+  const map = {
+    pending_initial: "待初审",
+    initial_pass_pending_final: "初审通过，待复审",
+    initial_reject_terminated: "初审拒绝，已终止",
+    final_return_pending_initial: "复审打回，待初审",
+    final_pass_effecting: "复审通过，生效中",
+    final_pass_effective: "复审通过，已生效",
+    final_pass_failed: "复审通过，生效失败",
+  };
+  return map[status] || status;
+}
+
+function getApplicationStatusClass(status) {
+  if (status === "initial_reject_terminated" || status === "final_pass_failed") return "rejected";
+  if (status === "final_pass_effective") return "approved";
+  return "pending";
+}
+
+function getApplicationReasonSummary(item) {
+  return item.reasonSummary && item.reasonSummary !== "-" ? item.reasonSummary : "-";
+}
+
+function getInitialProofLabel(item) {
+  return item.type === "withdraw" ? "付款凭证" : "收款凭证";
+}
+
+function renderProofCard(label, tone = "id-front") {
+  return `
+    <div class="photo-card proof-card">
+      <div class="photo ${tone}"></div>
+      <div style="margin-top:10px;">${label}</div>
+    </div>
+  `;
+}
+
+function getNowString() {
+  return "2026-04-23 15:20:00";
+}
+
+function generateApplicationId() {
+  const nextIndex = store.applicationRequests.length + 1;
+  return `AR20260423${String(nextIndex).padStart(4, "0")}`;
 }
 
 function getLatestKycRecord(userId) {
@@ -293,6 +641,9 @@ function navigate(hash, options = {}) {
   if (options.userTab) {
     store.activeUserTab = options.userTab;
   }
+  if (options.merchantTab) {
+    store.activeMerchantTab = options.merchantTab;
+  }
   window.location.hash = hash;
 }
 
@@ -312,6 +663,7 @@ function render() {
       </main>
     </div>
     ${renderAuditModal()}
+    ${renderApplicationModal()}
     ${renderWalletLimitConfirmModal()}
   `;
   bindEvents();
@@ -356,6 +708,13 @@ function renderSidebar() {
           <a class="nav-item ${store.route.name === "kycAudit" ? "active" : ""}" href="#kyc">用户认证审核管理</a>
         </div>
       </div>
+      <div class="nav-group">
+        <div class="nav-group-title">审核管理 <small>⌄</small></div>
+        <div class="nav-items">
+          <a class="nav-item ${store.route.name === "initialReviewList" ? "active" : ""}" href="#initialReviewList">初审列表</a>
+          <a class="nav-item ${store.route.name === "finalReviewList" ? "active" : ""}" href="#finalReviewList">复审列表</a>
+        </div>
+      </div>
     </aside>
   `;
 }
@@ -377,7 +736,11 @@ function renderTopbar(routeMeta) {
 }
 
 function renderTabs() {
-  const activeKey = store.route.name === "userDetail" ? "userList" : store.route.name;
+  const activeKey = ["userDetail"].includes(store.route.name)
+    ? "userList"
+    : ["merchantDetail", "merchantApplicationList"].includes(store.route.name)
+      ? "merchantList"
+      : store.route.name;
   return `
     <div class="tabs-bar">
       ${store.openTabs
@@ -388,6 +751,10 @@ function renderTabs() {
         .join("")}
       <a class="page-tab ${store.route.name === "walletLimitConfig" ? "active" : ""}" href="#walletLimitConfig">用户钱包限额配置</a>
       <a class="page-tab ${store.route.name === "kycAudit" ? "active" : ""}" href="#kyc">用户认证审核管理</a>
+      <a class="page-tab ${store.route.name === "initialReviewList" ? "active" : ""}" href="#initialReviewList">初审列表</a>
+      <a class="page-tab ${store.route.name === "finalReviewList" ? "active" : ""}" href="#finalReviewList">复审列表</a>
+      ${store.route.name === "merchantDetail" ? `<span class="page-tab active">商户详情</span>` : ""}
+      ${store.route.name === "merchantApplicationList" ? `<span class="page-tab active">申请记录</span>` : ""}
       ${store.route.name === "userDetail" ? `<span class="page-tab active">用户详情</span>` : ""}
     </div>
   `;
@@ -396,9 +763,17 @@ function renderTabs() {
 function renderPage() {
   switch (store.route.name) {
     case "merchantList":
-      return renderPlaceholderPage("商户列表", "这里保留了原后台常见模块入口，方便后续继续扩展商户相关功能。");
+      return renderMerchantListPage();
+    case "merchantDetail":
+      return renderMerchantDetailPage();
+    case "merchantApplicationList":
+      return renderMerchantApplicationListPage();
     case "rechargeList":
       return renderRechargePage();
+    case "initialReviewList":
+      return renderInitialReviewListPage();
+    case "finalReviewList":
+      return renderFinalReviewListPage();
     case "walletLimitConfig":
       return renderWalletLimitConfigPage();
     case "kycAudit":
@@ -418,10 +793,413 @@ function renderPlaceholderPage(title, description) {
       <div class="detail-header">
         <div class="title-block">
           <h1>${title}</h1>
-          <div class="title-meta"><span>${description}</span></div>
         </div>
       </div>
-      <p class="empty-note">当前重点实现的是用户管理与 KYC 审核模块，其他菜单保留为同风格占位入口。</p>
+      <p class="empty-note">${description}</p>
+    </section>
+  `;
+}
+
+function renderMerchantListPage() {
+  return `
+    <section class="card toolbar-card">
+      <div class="filters">
+        <div class="field">
+          <label>商户号</label>
+          <input placeholder="请输入商户号" />
+        </div>
+        <div class="field">
+          <label>商户名称</label>
+          <input placeholder="请输入商户名称" />
+        </div>
+        <div class="field">
+          <label>联系人</label>
+          <input placeholder="请输入联系人" />
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <select>
+            <option>全部</option>
+            <option>正常</option>
+            <option>停用</option>
+          </select>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn primary">查询</button>
+        <button class="btn ghost">重置</button>
+      </div>
+    </section>
+    <section class="card table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>商户号</th>
+            <th>商户名称</th>
+            <th>联系人</th>
+            <th>联系电话</th>
+            <th>账户余额</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${store.merchants
+            .map(
+              (merchant) => `
+            <tr>
+              <td>${merchant.code}</td>
+              <td>${merchant.name}</td>
+              <td>${merchant.contactName}</td>
+              <td>${merchant.contactPhone}</td>
+              <td>${formatMoney(merchant.paymentAccountBalance)}</td>
+              <td><span class="status approved">正常</span></td>
+              <td><button class="btn link" data-view-merchant="${merchant.id}">查看详情</button></td>
+            </tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </section>
+  `;
+}
+
+function renderMerchantDetailPage() {
+  const merchant = getMerchant(store.route.params.merchantId);
+  return `
+    <section class="card detail-card">
+      <div class="action-row" style="margin-top:0; margin-bottom:18px;">
+        <button class="btn primary" data-back-merchant-list="1">返回</button>
+      </div>
+      <div class="detail-header">
+        <div class="title-block">
+          <h1>${merchant.name}</h1>
+          <div class="title-meta">
+            <span>${merchant.id}</span>
+            <span>${merchant.code}</span>
+            <span>联系人：${merchant.contactName}</span>
+          </div>
+        </div>
+      </div>
+      <div class="subtabs">
+        <button class="subtab ${store.activeMerchantTab === "basic" ? "active" : ""}" data-merchant-tab="basic">基本信息</button>
+        <button class="subtab ${store.activeMerchantTab === "payment" ? "active" : ""}" data-merchant-tab="payment">支付账户管理</button>
+        <button class="subtab">话费账户管理</button>
+        <button class="subtab">费率设置</button>
+      </div>
+      ${store.activeMerchantTab === "basic" ? renderMerchantBasicTab(merchant) : renderMerchantPaymentTab(merchant)}
+    </section>
+  `;
+}
+
+function renderMerchantBasicTab(merchant) {
+  return `
+    <div class="form-grid">
+      <div class="field"><label>商户号</label><input value="${merchant.code}" disabled /></div>
+      <div class="field"><label>商户名称</label><input value="${merchant.name}" disabled /></div>
+      <div class="field"><label>联系人</label><input value="${merchant.contactName}" disabled /></div>
+      <div class="field"><label>联系电话</label><input value="${merchant.contactPhone}" disabled /></div>
+    </div>
+  `;
+}
+
+function renderMerchantPaymentTab(merchant) {
+  return `
+    <div class="wallet-summary">
+      <div>
+        <div>账户余额</div>
+        <strong>${formatMoney(merchant.paymentAccountBalance)}</strong>
+      </div>
+      <div class="action-row" style="margin:0;">
+        <button class="btn primary" data-open-tx="recharge" data-merchant-id="${merchant.id}">充值</button>
+        <button class="btn ghost" data-open-tx="withdraw" data-merchant-id="${merchant.id}">提现</button>
+        <button class="btn ghost" data-view-applications="${merchant.id}">申请记录</button>
+      </div>
+    </div>
+    <section class="card toolbar-card" style="margin-top:18px;">
+      <div class="filters">
+        <div class="field">
+          <label>类型</label>
+          <select>
+            <option>全部</option>
+            <option>充值</option>
+            <option>提现</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>交易日期</label>
+          <input placeholder="开始时间 - 结束时间" />
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn primary">查询</button>
+        <button class="btn ghost">重置</button>
+      </div>
+    </section>
+    <section class="card table-card" style="padding:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>类型</th>
+            <th>渠道</th>
+            <th>交易金额/P</th>
+            <th>交易证明文件</th>
+            <th>收款账号</th>
+            <th>创建时间</th>
+            <th>备注</th>
+            <th>余额</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${merchant.flows
+            .map(
+              (item, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${item.type}</td>
+              <td>${item.channel}</td>
+              <td>${item.amount > 0 ? "+" : ""}${formatMoney(item.amount)}</td>
+              <td>${item.proof}</td>
+              <td>${item.payeeAccount}</td>
+              <td>${item.createdAt}</td>
+              <td>${item.note}</td>
+              <td>${formatMoney(item.balance)}</td>
+            </tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span>每页 10 条</span>
+        <span>共 ${merchant.flows.length} 条</span>
+      </div>
+    </section>
+  `;
+}
+
+function renderMerchantApplicationListPage() {
+  const merchant = getMerchant(store.route.params.merchantId);
+  const records = getMerchantApplications(merchant.id);
+  return `
+    <section class="card detail-card">
+      <div class="action-row" style="margin-top:0; margin-bottom:18px;">
+        <button class="btn primary" data-back-merchant="${merchant.id}">返回</button>
+      </div>
+      <div class="info-grid">
+        <div class="info-panel">
+          <strong>当前商户</strong>
+          <p>${merchant.name}</p>
+          <p>${merchant.code}</p>
+        </div>
+        <div class="info-panel">
+          <strong>申请总数</strong>
+          <p>${records.length}</p>
+        </div>
+      </div>
+      <section class="card toolbar-card" style="padding:0; box-shadow:none; border:none;">
+        <div class="filters">
+          <div class="field"><label>申请单号</label><input placeholder="请输入申请单号" /></div>
+          <div class="field">
+            <label>交易类型</label>
+            <select><option>全部</option><option>充值</option><option>提现</option></select>
+          </div>
+          <div class="field">
+            <label>当前状态</label>
+            <select>
+              <option>全部</option>
+              <option>待初审</option>
+              <option>初审通过，待复审</option>
+              <option>初审拒绝，已终止</option>
+              <option>复审打回，待初审</option>
+              <option>复审通过，已生效</option>
+              <option>复审通过，生效失败</option>
+            </select>
+          </div>
+          <div class="field"><label>发起时间</label><input placeholder="开始时间 - 结束时间" /></div>
+        </div>
+        <div class="action-row">
+          <button class="btn primary">查询</button>
+          <button class="btn ghost">重置</button>
+        </div>
+      </section>
+      <section class="card table-card" style="padding:0;">
+        <table>
+          <thead>
+            <tr>
+              <th>申请单号</th>
+              <th>交易类型</th>
+              <th>商户号</th>
+              <th>商户名称</th>
+              <th>交易金额</th>
+              <th>交易日期</th>
+              <th>发起人</th>
+              <th>发起时间</th>
+              <th>当前状态</th>
+              <th>最近处理时间</th>
+              <th>原因摘要</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${records
+              .map(
+                (item) => `
+              <tr>
+                <td>${item.id}</td>
+                <td>${getApplicationTypeLabel(item.type)}</td>
+                <td>${item.merchantCode}</td>
+                <td>${item.merchantName}</td>
+                <td>${formatMoney(item.amount)}</td>
+                <td>${item.tradeDate}</td>
+                <td>${item.initiator}</td>
+                <td>${item.initiatedAt}</td>
+                <td><span class="status ${getApplicationStatusClass(item.currentStatus)}">${getApplicationStatusLabel(item.currentStatus)}</span></td>
+                <td>${item.latestProcessedAt}</td>
+                <td>${getApplicationReasonSummary(item)}</td>
+                <td><button class="btn link" data-view-application="${item.id}">查看</button></td>
+              </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>
+        <div class="pagination">
+          <span>每页 10 条</span>
+          <span>共 ${records.length} 条</span>
+        </div>
+      </section>
+    </section>
+  `;
+}
+
+function renderInitialReviewListPage() {
+  const records = store.applicationRequests.filter((item) => ["pending_initial", "final_return_pending_initial"].includes(item.currentStatus));
+  return `
+    <section class="card toolbar-card">
+      <div class="filters">
+        <div class="field"><label>申请单号</label><input placeholder="请输入申请单号" /></div>
+        <div class="field"><label>商户号</label><input placeholder="请输入商户号" /></div>
+        <div class="field">
+          <label>交易类型</label>
+          <select><option>全部</option><option>充值</option><option>提现</option></select>
+        </div>
+        <div class="field">
+          <label>当前状态</label>
+          <select>
+            <option>全部</option>
+            <option>待初审</option>
+            <option>复审打回，待初审</option>
+            <option>初审拒绝，已终止</option>
+          </select>
+        </div>
+        <div class="field"><label>发起时间</label><input placeholder="开始时间 - 结束时间" /></div>
+      </div>
+      <div class="action-row">
+        <button class="btn primary">查询</button>
+        <button class="btn ghost">重置</button>
+      </div>
+    </section>
+    <section class="card table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>申请单号</th>
+            <th>交易类型</th>
+            <th>商户号</th>
+            <th>商户名称</th>
+            <th>交易金额</th>
+            <th>发起人</th>
+            <th>发起时间</th>
+            <th>当前状态</th>
+            <th>原因摘要</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${records
+            .map(
+              (item) => `
+            <tr>
+              <td>${item.id}</td>
+              <td>${getApplicationTypeLabel(item.type)}</td>
+              <td>${item.merchantCode}</td>
+              <td>${item.merchantName}</td>
+              <td>${formatMoney(item.amount)}</td>
+              <td>${item.initiator}</td>
+              <td>${item.initiatedAt}</td>
+              <td><span class="status ${getApplicationStatusClass(item.currentStatus)}">${getApplicationStatusLabel(item.currentStatus)}</span></td>
+              <td>${getApplicationReasonSummary(item)}</td>
+              <td><button class="btn link" data-open-initial-review="${item.id}">审核</button></td>
+            </tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </section>
+  `;
+}
+
+function renderFinalReviewListPage() {
+  const records = store.applicationRequests.filter((item) => item.currentStatus === "initial_pass_pending_final");
+  return `
+    <section class="card toolbar-card">
+      <div class="filters">
+        <div class="field"><label>申请单号</label><input placeholder="请输入申请单号" /></div>
+        <div class="field"><label>商户号</label><input placeholder="请输入商户号" /></div>
+        <div class="field">
+          <label>交易类型</label>
+          <select><option>全部</option><option>充值</option><option>提现</option></select>
+        </div>
+        <div class="field">
+          <label>当前状态</label>
+          <select>
+            <option>全部</option>
+            <option>初审通过，待复审</option>
+            <option>复审通过，生效中</option>
+            <option>复审通过，生效失败</option>
+          </select>
+        </div>
+        <div class="field"><label>发起时间</label><input placeholder="开始时间 - 结束时间" /></div>
+      </div>
+      <div class="action-row">
+        <button class="btn primary">查询</button>
+        <button class="btn ghost">重置</button>
+      </div>
+    </section>
+    <section class="card table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>申请单号</th>
+            <th>交易类型</th>
+            <th>商户号</th>
+            <th>商户名称</th>
+            <th>交易金额</th>
+            <th>初审人</th>
+            <th>初审时间</th>
+            <th>当前状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${records
+            .map(
+              (item) => `
+            <tr>
+              <td>${item.id}</td>
+              <td>${getApplicationTypeLabel(item.type)}</td>
+              <td>${item.merchantCode}</td>
+              <td>${item.merchantName}</td>
+              <td>${formatMoney(item.amount)}</td>
+              <td>${item.initialReview.reviewer}</td>
+              <td>${item.initialReview.reviewedAt}</td>
+              <td><span class="status ${getApplicationStatusClass(item.currentStatus)}">${getApplicationStatusLabel(item.currentStatus)}</span></td>
+              <td><button class="btn link" data-open-final-review="${item.id}">审核</button></td>
+            </tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
     </section>
   `;
 }
@@ -943,6 +1721,306 @@ function renderKycAuditPage() {
   `;
 }
 
+function renderApplicationModal() {
+  if (!store.activeModal) {
+    return "";
+  }
+
+  const { type } = store.activeModal;
+  if (type === "txForm") {
+    return renderTransactionFormModal();
+  }
+  if (type === "txVerify") {
+    return renderTransactionVerifyModal();
+  }
+  if (type === "applicationView") {
+    return renderApplicationDetailModal();
+  }
+  if (type === "initialReview") {
+    return renderInitialReviewModal();
+  }
+  if (type === "finalReview") {
+    return renderFinalReviewModal();
+  }
+  return "";
+}
+
+function renderTransactionFormModal() {
+  const merchant = getMerchant(store.activeModal.merchantId);
+  const typeLabel = getApplicationTypeLabel(store.activeModal.txType);
+  const proofLabel = store.activeModal.proofLabel || `付款凭证-${merchant.code}`;
+  return `
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <strong>${typeLabel}</strong>
+          <button class="close-btn" data-close-active-modal="1">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="transactionRequestForm" data-merchant-id="${merchant.id}" data-tx-type="${store.activeModal.txType}">
+            <div class="form-grid">
+              <div class="field">
+                <label>交易类型</label>
+                <input value="${typeLabel}" disabled />
+              </div>
+              <div class="field">
+                <label>商户号</label>
+                <input value="${merchant.code}" disabled />
+              </div>
+              <div class="field">
+                <label>交易金额/P</label>
+                <input name="amount" type="number" min="0" step="0.01" value="${store.activeModal.txType === "recharge" ? "1000" : "500"}" />
+              </div>
+              <div class="field">
+                <label>交易日期</label>
+                <input name="tradeDate" value="${getNowString()}" />
+              </div>
+              <div class="field">
+                <label>交易证明文件</label>
+                <input type="hidden" name="proofLabel" value="${proofLabel}" />
+                <div class="media-grid compact">
+                  ${renderProofCard(proofLabel, "id-front")}
+                  <button class="upload-card" type="button" data-upload-tx-proof="1">上传图片</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>收款渠道</label>
+                <input name="channel" value="${store.activeModal.txType === "recharge" ? "Bank of PH" : "GCash"}" />
+              </div>
+              <div class="field">
+                <label>收款账号</label>
+                <input name="account" value="${merchant.contactPhone}" />
+              </div>
+              <div class="field full">
+                <label>备注</label>
+                <textarea name="remark" placeholder="请输入">${store.activeModal.txType === "recharge" ? "商户充值申请" : "商户提现申请"}</textarea>
+              </div>
+            </div>
+            <div id="transactionFormError" class="error-text"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" data-close-active-modal="1">取消</button>
+          <button class="btn primary" data-transaction-next="1">下一步</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderTransactionVerifyModal() {
+  const merchant = getMerchant(store.activeModal.draft.merchantId);
+  return `
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <strong>手机验证</strong>
+          <button class="close-btn" data-close-active-modal="1">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field">
+              <label>手机号</label>
+              <input value="${merchant.contactPhone}" disabled />
+            </div>
+            <div class="field">
+              <label>验证码</label>
+              <input id="smsCode" placeholder="请输入验证码" />
+            </div>
+          </div>
+          <div id="transactionVerifyError" class="error-text"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" data-transaction-prev="1">上一步</button>
+          <button class="btn primary" data-transaction-submit="1">立即验证</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderApplicationDetailModal() {
+  const item = getApplication(store.activeModal.applicationId);
+  if (!item) {
+    return "";
+  }
+  return `
+    <div class="modal-backdrop">
+      <div class="modal wide">
+        <div class="modal-header">
+          <strong>申请详情</strong>
+          <button class="close-btn" data-close-active-modal="1">×</button>
+        </div>
+        <div class="modal-body">
+          ${renderApplicationDetailSections(item)}
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" data-close-active-modal="1">关闭</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderInitialReviewModal() {
+  const item = getApplication(store.activeModal.applicationId);
+  if (!item) {
+    return "";
+  }
+  const proofLabel = store.activeModal.receiptProofLabel || "";
+  return `
+    <div class="modal-backdrop">
+      <div class="modal wide">
+        <div class="modal-header">
+          <strong>初审处理</strong>
+          <button class="close-btn" data-close-active-modal="1">×</button>
+        </div>
+        <div class="modal-body">
+          ${renderApplicationDetailSections(item)}
+          <div class="section-title">初审操作</div>
+          <form id="initialReviewForm" data-application-id="${item.id}">
+            <div class="form-grid">
+              <div class="field">
+                <label>初审结论</label>
+                <select name="decision">
+                  <option value="approved">初审通过</option>
+                  <option value="rejected">初审拒绝</option>
+                </select>
+              </div>
+              <div class="field full action-focus-card">
+                <label>${getInitialProofLabel(item)}</label>
+                <input type="hidden" name="receiptProofLabel" value="${proofLabel}" />
+                <div class="media-grid compact">
+                  ${proofLabel ? renderProofCard(proofLabel, "face") : ""}
+                  <button class="upload-card primary-upload" type="button" data-upload-initial-proof="${item.id}">${proofLabel ? "重新上传图片" : "上传图片"}</button>
+                </div>
+              </div>
+              <div class="field full">
+                <label>处理备注</label>
+                <textarea name="remark" placeholder="初审拒绝时必填"></textarea>
+              </div>
+            </div>
+            <div id="initialReviewError" class="error-text"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" data-close-active-modal="1">取消</button>
+          <button class="btn primary" data-submit-initial-review="${item.id}">提交初审结果</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderFinalReviewModal() {
+  const item = getApplication(store.activeModal.applicationId);
+  if (!item) {
+    return "";
+  }
+  return `
+    <div class="modal-backdrop">
+      <div class="modal wide">
+        <div class="modal-header">
+          <strong>复审处理</strong>
+          <button class="close-btn" data-close-active-modal="1">×</button>
+        </div>
+        <div class="modal-body">
+          ${renderApplicationDetailSections(item)}
+          <div class="section-title">复审操作</div>
+          <form id="finalReviewForm" data-application-id="${item.id}">
+            <div class="form-grid">
+              <div class="field action-focus-card">
+                <label>复审结论</label>
+                <select name="decision">
+                  <option value="approved">复审通过</option>
+                  <option value="returned">复审打回</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>处理备注</label>
+                <textarea name="remark" placeholder="复审打回时必填"></textarea>
+              </div>
+            </div>
+            <div id="finalReviewError" class="error-text"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" data-close-active-modal="1">取消</button>
+          <button class="btn primary" data-submit-final-review="${item.id}">提交复审结果</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderApplicationDetailSections(item) {
+  return `
+    <div class="section-title">基本信息</div>
+    <div class="form-grid">
+      <div class="field"><label>申请单号</label><input value="${item.id}" disabled /></div>
+      <div class="field"><label>商户号</label><input value="${item.merchantCode}" disabled /></div>
+      <div class="field"><label>商户名称</label><input value="${item.merchantName}" disabled /></div>
+      <div class="field"><label>交易类型</label><input value="${getApplicationTypeLabel(item.type)}" disabled /></div>
+      <div class="field"><label>发起人</label><input value="${item.initiator}" disabled /></div>
+      <div class="field"><label>发起时间</label><input value="${item.initiatedAt}" disabled /></div>
+      <div class="field full"><label>当前状态</label><input value="${getApplicationStatusLabel(item.currentStatus)}" disabled /></div>
+    </div>
+    <div class="section-title">发起信息</div>
+    <div class="form-grid">
+      <div class="field"><label>交易金额</label><input value="${formatMoney(item.amount)}" disabled /></div>
+      <div class="field"><label>交易日期</label><input value="${item.tradeDate}" disabled /></div>
+      <div class="field"><label>收款渠道</label><input value="${item.initiation.channel}" disabled /></div>
+      <div class="field"><label>收款账号</label><input value="${item.initiation.account}" disabled /></div>
+      <div class="field full"><label>发起备注</label><textarea disabled>${item.initiation.remark || "-"}</textarea></div>
+    </div>
+    <div class="section-title">发起凭证</div>
+    <div class="media-grid">
+      ${renderProofCard(item.initiation.proofLabel, "id-front")}
+    </div>
+    <div class="section-title">初审结果</div>
+    <div class="form-grid">
+      <div class="field"><label>初审状态</label><input value="${item.initialReview.status === "approved" ? "已通过" : item.initialReview.status === "rejected" ? "已拒绝" : "待处理"}" disabled /></div>
+      <div class="field"><label>初审人</label><input value="${item.initialReview.reviewer}" disabled /></div>
+      <div class="field"><label>初审时间</label><input value="${item.initialReview.reviewedAt}" disabled /></div>
+      <div class="field full"><label>初审备注</label><textarea disabled>${item.initialReview.remark || "-"}</textarea></div>
+    </div>
+    <div class="section-title">${getInitialProofLabel(item)}</div>
+    <div class="media-grid">
+      ${
+        item.initialReview.receiptProofLabel && item.initialReview.receiptProofLabel !== "-"
+          ? renderProofCard(item.initialReview.receiptProofLabel, "face")
+          : `<div class="photo-card proof-card"><div class="photo empty"></div><div style="margin-top:10px;">暂无凭证</div></div>`
+      }
+    </div>
+    <div class="section-title">复审结果</div>
+    <div class="form-grid">
+      <div class="field"><label>复审状态</label><input value="${item.finalReview.status === "approved" ? "已通过" : item.finalReview.status === "returned" ? "已打回" : "待处理"}" disabled /></div>
+      <div class="field"><label>复审人</label><input value="${item.finalReview.reviewer}" disabled /></div>
+      <div class="field"><label>复审时间</label><input value="${item.finalReview.reviewedAt}" disabled /></div>
+      <div class="field full"><label>复审备注</label><textarea disabled>${item.finalReview.remark || "-"}</textarea></div>
+    </div>
+    <div class="section-title">最终结果</div>
+    <div class="form-grid">
+      <div class="field"><label>是否已生效</label><input value="${item.finalResult.effectiveStatus === "effective" ? "已生效" : item.finalResult.effectiveStatus === "failed" ? "生效失败" : "未生效"}" disabled /></div>
+      <div class="field"><label>生效时间</label><input value="${item.finalResult.effectiveAt}" disabled /></div>
+      <div class="field full"><label>失败原因</label><textarea disabled>${item.finalResult.failureReason || "-"}</textarea></div>
+    </div>
+    <div class="section-title">流转记录</div>
+    <div class="log-list">
+      ${(item.reviewLogs || [])
+        .map(
+          (log) => `
+        <div class="log-item">
+          <strong>${log.time} · ${log.action}</strong>
+          <p>${log.role} · ${log.operator}</p>
+          <p>${log.remark}</p>
+        </div>`
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderAuditModal() {
   if (!store.activeKycId) {
     return "";
@@ -1048,6 +2126,92 @@ function statusLabel(status) {
   return map[status] || status;
 }
 
+function applyApplicationEffect(item) {
+  const merchant = getMerchant(item.merchantId);
+  const executedAt = getNowString();
+  if (item.type === "recharge") {
+    merchant.paymentAccountBalance += item.amount;
+    merchant.flows.unshift({
+      id: `F${String(merchant.flows.length + 1).padStart(3, "0")}`,
+      type: "审核充值入账",
+      channel: item.initiation.channel,
+      amount: item.amount,
+      proof: item.initialReview.receiptProofLabel || "-",
+      payeeAccount: item.initiation.account,
+      createdAt: executedAt,
+      note: item.finalReview.remark || "-",
+      balance: merchant.paymentAccountBalance,
+    });
+    item.currentStatus = "final_pass_effective";
+    item.latestProcessedAt = executedAt;
+    item.reasonSummary = "-";
+    item.finalResult = {
+      effectiveStatus: "effective",
+      effectiveAt: executedAt,
+      failureReason: "-",
+    };
+    item.reviewLogs = item.reviewLogs || [];
+    item.reviewLogs.push({
+      time: executedAt,
+      role: "系统",
+      operator: "System",
+      action: "执行成功",
+      remark: "商户余额已更新",
+    });
+    return { ok: true };
+  }
+
+  if (merchant.paymentAccountBalance < item.amount) {
+    item.currentStatus = "final_pass_failed";
+    item.latestProcessedAt = executedAt;
+    item.reasonSummary = "商户账户余额不足，执行失败";
+    item.finalResult = {
+      effectiveStatus: "failed",
+      effectiveAt: "-",
+      failureReason: "商户账户余额不足，执行失败",
+    };
+    item.reviewLogs = item.reviewLogs || [];
+    item.reviewLogs.push({
+      time: executedAt,
+      role: "系统",
+      operator: "System",
+      action: "执行失败",
+      remark: "商户账户余额不足，执行失败",
+    });
+    return { ok: false, message: "商户账户余额不足，执行失败" };
+  }
+
+  merchant.paymentAccountBalance -= item.amount;
+  merchant.flows.unshift({
+    id: `F${String(merchant.flows.length + 1).padStart(3, "0")}`,
+    type: "审核提现出账",
+    channel: item.initiation.channel,
+    amount: -item.amount,
+    proof: item.initialReview.receiptProofLabel || "-",
+    payeeAccount: item.initiation.account,
+    createdAt: executedAt,
+    note: item.finalReview.remark || "-",
+    balance: merchant.paymentAccountBalance,
+  });
+  item.currentStatus = "final_pass_effective";
+  item.latestProcessedAt = executedAt;
+  item.reasonSummary = "-";
+  item.finalResult = {
+    effectiveStatus: "effective",
+    effectiveAt: executedAt,
+    failureReason: "-",
+  };
+  item.reviewLogs = item.reviewLogs || [];
+  item.reviewLogs.push({
+    time: executedAt,
+    role: "系统",
+    operator: "System",
+    action: "执行成功",
+    remark: "商户余额已更新",
+  });
+  return { ok: true };
+}
+
 function bindEvents() {
   document.querySelectorAll("[data-view-user]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1062,6 +2226,351 @@ function bindEvents() {
   document.querySelectorAll("[data-user-tab]").forEach((button) => {
     button.addEventListener("click", () => {
       store.activeUserTab = button.dataset.userTab;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-view-merchant]").forEach((button) => {
+    button.addEventListener("click", () => {
+      navigate(`merchant/${button.dataset.viewMerchant}`, { merchantTab: "payment" });
+    });
+  });
+
+  document.querySelectorAll("[data-back-merchant-list]").forEach((button) => {
+    button.addEventListener("click", () => navigate("merchantList"));
+  });
+
+  document.querySelectorAll("[data-back-merchant]").forEach((button) => {
+    button.addEventListener("click", () => navigate(`merchant/${button.dataset.backMerchant}`, { merchantTab: "payment" }));
+  });
+
+  document.querySelectorAll("[data-merchant-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeMerchantTab = button.dataset.merchantTab;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-open-tx]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeModal = {
+        type: "txForm",
+        merchantId: button.dataset.merchantId,
+        txType: button.dataset.openTx,
+        proofLabel: `付款凭证-${getMerchant(button.dataset.merchantId).code}`,
+      };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-view-applications]").forEach((button) => {
+    button.addEventListener("click", () => {
+      navigate(`merchant/${button.dataset.viewApplications}/applications`, { merchantTab: "payment" });
+    });
+  });
+
+  document.querySelectorAll("[data-view-application]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeModal = { type: "applicationView", applicationId: button.dataset.viewApplication };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-open-initial-review]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeModal = { type: "initialReview", applicationId: button.dataset.openInitialReview };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-open-final-review]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeModal = { type: "finalReview", applicationId: button.dataset.openFinalReview };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-close-active-modal]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.activeModal = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-upload-tx-proof]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!store.activeModal || store.activeModal.type !== "txForm") return;
+      store.activeModal = {
+        ...store.activeModal,
+        proofLabel: `${store.activeModal.txType === "withdraw" ? "付款凭证" : "交易凭证"}-${getMerchant(store.activeModal.merchantId).code}-IMG`,
+      };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-upload-initial-proof]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = getApplication(button.dataset.uploadInitialProof);
+      if (!item) return;
+      store.activeModal = {
+        ...store.activeModal,
+        receiptProofLabel: `${getInitialProofLabel(item)}-${item.id}-IMG`,
+      };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-transaction-next]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const form = document.getElementById("transactionRequestForm");
+      const errorNode = document.getElementById("transactionFormError");
+      if (!form || !errorNode) return;
+      const formData = new FormData(form);
+      const amount = Number(formData.get("amount"));
+      const tradeDate = String(formData.get("tradeDate")).trim();
+      const proofLabel = String(formData.get("proofLabel")).trim();
+      const channel = String(formData.get("channel")).trim();
+      const account = String(formData.get("account")).trim();
+      const remark = String(formData.get("remark")).trim();
+      errorNode.textContent = "";
+
+      if (Number.isNaN(amount) || amount <= 0) {
+        errorNode.textContent = "交易金额必须大于 0。";
+        return;
+      }
+      if (!tradeDate || !proofLabel || !channel || !account) {
+        errorNode.textContent = "请补齐交易日期、凭证、收款渠道和收款账号。";
+        return;
+      }
+
+      store.activeModal = {
+        type: "txVerify",
+        draft: {
+          merchantId: form.dataset.merchantId,
+          type: form.dataset.txType,
+          amount,
+          tradeDate,
+          proofLabel,
+          channel,
+          account,
+          remark,
+        },
+      };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-transaction-prev]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const { draft } = store.activeModal;
+      store.activeModal = {
+        type: "txForm",
+        merchantId: draft.merchantId,
+        txType: draft.type,
+      };
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-transaction-submit]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const codeNode = document.getElementById("smsCode");
+      const errorNode = document.getElementById("transactionVerifyError");
+      if (!codeNode || !errorNode) return;
+      const code = codeNode.value.trim();
+      errorNode.textContent = "";
+      if (!code) {
+        errorNode.textContent = "请输入验证码。";
+        return;
+      }
+
+      const draft = store.activeModal.draft;
+      const merchant = getMerchant(draft.merchantId);
+      const createdAt = getNowString();
+      store.applicationRequests.unshift({
+        id: generateApplicationId(),
+        type: draft.type,
+        merchantId: merchant.id,
+        merchantCode: merchant.code,
+        merchantName: merchant.name,
+        amount: draft.amount,
+        tradeDate: draft.tradeDate,
+        initiator: "starxu",
+        initiatedAt: createdAt,
+        currentStatus: "pending_initial",
+        latestProcessedAt: createdAt,
+        reasonSummary: "-",
+        initiation: {
+          proofLabel: draft.proofLabel,
+          channel: draft.channel,
+          account: draft.account,
+          remark: draft.remark || "-",
+        },
+        initialReview: {
+          status: "pending",
+          reviewer: "-",
+          reviewedAt: "-",
+          remark: "-",
+          receiptProofLabel: "-",
+        },
+        finalReview: {
+          status: "pending",
+          reviewer: "-",
+          reviewedAt: "-",
+          remark: "-",
+        },
+        finalResult: {
+          effectiveStatus: "pending",
+          effectiveAt: "-",
+          failureReason: "-",
+        },
+        reviewLogs: [
+          { time: createdAt, role: "发起人", operator: "starxu", action: "提交申请", remark: `提交${getApplicationTypeLabel(draft.type)}申请，进入待初审` },
+        ],
+      });
+      store.activeModal = null;
+      store.flash = `${getApplicationTypeLabel(draft.type)}申请已提交，当前状态为“待初审”，商户余额暂不变更。`;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-submit-initial-review]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = getApplication(button.dataset.submitInitialReview);
+      const form = document.getElementById("initialReviewForm");
+      const errorNode = document.getElementById("initialReviewError");
+      if (!item || !form || !errorNode) return;
+      if (!["pending_initial", "final_return_pending_initial"].includes(item.currentStatus)) {
+        store.flash = "当前申请状态已更新，请刷新后重试。";
+        store.activeModal = null;
+        render();
+        return;
+      }
+      const formData = new FormData(form);
+      const decision = String(formData.get("decision"));
+      const receiptProofLabel = String(formData.get("receiptProofLabel")).trim();
+      const remark = String(formData.get("remark")).trim();
+      errorNode.textContent = "";
+
+      if (decision === "approved" && !receiptProofLabel) {
+        errorNode.textContent = "初审通过时必须上传收款凭证。";
+        return;
+      }
+      if (decision === "rejected" && !remark) {
+        errorNode.textContent = "初审拒绝时必须填写拒绝原因。";
+        return;
+      }
+
+      item.initialReview = {
+        status: decision,
+        reviewer: "财务A",
+        reviewedAt: getNowString(),
+        remark: remark || "初审通过",
+        receiptProofLabel: receiptProofLabel || "-",
+      };
+      item.latestProcessedAt = item.initialReview.reviewedAt;
+
+      if (decision === "approved") {
+        item.currentStatus = "initial_pass_pending_final";
+        item.reasonSummary = "-";
+        item.reviewLogs = item.reviewLogs || [];
+        item.reviewLogs.push({
+          time: item.initialReview.reviewedAt,
+          role: "初审",
+          operator: item.initialReview.reviewer,
+          action: item.reviewLogs.some((log) => log.action.includes("复审打回")) ? "再次初审通过" : "初审通过",
+          remark: `${item.initialReview.remark || "初审通过"}，上传${item.initialReview.receiptProofLabel}`,
+        });
+        store.flash = `申请 ${item.id} 初审通过，已进入复审列表。`;
+      } else {
+        item.currentStatus = "initial_reject_terminated";
+        item.reasonSummary = `初审拒绝：${remark}`;
+        item.finalResult = {
+          effectiveStatus: "terminated",
+          effectiveAt: "-",
+          failureReason: remark,
+        };
+        item.reviewLogs = item.reviewLogs || [];
+        item.reviewLogs.push({
+          time: item.initialReview.reviewedAt,
+          role: "初审",
+          operator: item.initialReview.reviewer,
+          action: "初审拒绝",
+          remark,
+        });
+        store.flash = `申请 ${item.id} 已初审拒绝并终止。`;
+      }
+
+      store.activeModal = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-submit-final-review]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = getApplication(button.dataset.submitFinalReview);
+      const form = document.getElementById("finalReviewForm");
+      const errorNode = document.getElementById("finalReviewError");
+      if (!item || !form || !errorNode) return;
+      if (item.currentStatus !== "initial_pass_pending_final") {
+        store.flash = "当前申请状态已更新，请刷新后重试。";
+        store.activeModal = null;
+        render();
+        return;
+      }
+
+      const formData = new FormData(form);
+      const decision = String(formData.get("decision"));
+      const remark = String(formData.get("remark")).trim();
+      errorNode.textContent = "";
+
+      if (decision === "returned" && !remark) {
+        errorNode.textContent = "复审打回时必须填写打回原因。";
+        return;
+      }
+
+      item.finalReview = {
+        status: decision,
+        reviewer: "老板A",
+        reviewedAt: getNowString(),
+        remark: remark || "复审通过",
+      };
+
+      if (decision === "returned") {
+        item.currentStatus = "final_return_pending_initial";
+        item.latestProcessedAt = item.finalReview.reviewedAt;
+        item.reasonSummary = `复审打回：${remark}`;
+        item.finalResult = {
+          effectiveStatus: "pending",
+          effectiveAt: "-",
+          failureReason: "-",
+        };
+        item.reviewLogs = item.reviewLogs || [];
+        item.reviewLogs.push({
+          time: item.finalReview.reviewedAt,
+          role: "复审",
+          operator: item.finalReview.reviewer,
+          action: "复审打回",
+          remark,
+        });
+        store.flash = `申请 ${item.id} 已复审打回，返回初审列表。`;
+      } else {
+        item.currentStatus = "final_pass_effecting";
+        item.reviewLogs = item.reviewLogs || [];
+        item.reviewLogs.push({
+          time: item.finalReview.reviewedAt,
+          role: "复审",
+          operator: item.finalReview.reviewer,
+          action: "复审通过",
+          remark: item.finalReview.remark || "复审通过",
+        });
+        const result = applyApplicationEffect(item);
+        store.flash = result.ok
+          ? `申请 ${item.id} 已复审通过并生效。`
+          : `申请 ${item.id} 复审通过，但${result.message}`;
+      }
+
+      store.activeModal = null;
       render();
     });
   });

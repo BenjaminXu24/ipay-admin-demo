@@ -428,6 +428,10 @@ th {
   gap: 16px;
 }
 
+.media-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
 .photo-card {
   border: 1px dashed #d8dee8;
   border-radius: 10px;
@@ -485,6 +489,27 @@ th {
   color: var(--muted);
 }
 
+.proof-card {
+  min-height: 100%;
+}
+
+.upload-card {
+  min-height: 232px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.upload-card.primary-upload {
+  border-color: #fb923c;
+  background: #fff7ed;
+  color: #ea580c;
+  font-weight: 700;
+}
+
 .wallet-summary {
   display: flex;
   justify-content: space-between;
@@ -539,6 +564,10 @@ th {
   flex-direction: column;
 }
 
+.modal.wide {
+  width: min(960px, 100%);
+}
+
 .modal-header,
 .modal-footer {
   padding: 18px 22px;
@@ -560,6 +589,15 @@ th {
   padding: 22px;
   overflow-y: auto;
   min-height: 0;
+}
+
+.modal input:disabled,
+.modal textarea:disabled,
+.modal select:disabled {
+  background: #f3f4f6;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
 }
 
 .modal-footer {
@@ -596,6 +634,14 @@ th {
   color: #475569;
 }
 
+.action-focus-card {
+  padding: 14px;
+  border: 1px solid #fdba74;
+  border-radius: 12px;
+  background: #fff7ed;
+  box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.12);
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -622,6 +668,10 @@ th {
   color: #64748b;
   font-size: 13px;
   line-height: 1.6;
+}
+
+.info-panel + .info-panel {
+  margin-top: 0;
 }
 
 .log-list {
