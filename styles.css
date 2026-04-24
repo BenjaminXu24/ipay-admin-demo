@@ -341,6 +341,11 @@ textarea {
   margin-bottom: 16px;
 }
 
+.compact-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 12px 0 18px;
+}
+
 .stat {
   padding: 20px;
   text-align: center;

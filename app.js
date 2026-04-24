@@ -30,15 +30,15 @@ const store = {
   },
   fundsSummaryRows: [],
   fundsSummarySource: [
-    { date: "2026-04-24", collectionIn: 385000.25, payoutOut: 301440.55, manualRecharge: 25000, manualWithdraw: 18000, updatedAt: "2026-04-24 18:20:12" },
-    { date: "2026-04-23", collectionIn: 412340.2, payoutOut: 288110.8, manualRecharge: 30000, manualWithdraw: 12000, updatedAt: "2026-04-23 18:16:02" },
-    { date: "2026-04-22", collectionIn: 368920.85, payoutOut: 295200.45, manualRecharge: 18000, manualWithdraw: 26000, updatedAt: "2026-04-22 18:10:33" },
-    { date: "2026-04-21", collectionIn: 433210.3, payoutOut: 320100.95, manualRecharge: 42000, manualWithdraw: 16500, updatedAt: "2026-04-21 18:08:41" },
-    { date: "2026-04-20", collectionIn: 295880.4, payoutOut: 274300.15, manualRecharge: 15000, manualWithdraw: 21000, updatedAt: "2026-04-20 18:05:27" },
-    { date: "2026-04-19", collectionIn: 401500.6, payoutOut: 312800.5, manualRecharge: 28000, manualWithdraw: 24000, updatedAt: "2026-04-19 18:11:50" },
-    { date: "2026-04-18", collectionIn: 389900.95, payoutOut: 305420.35, manualRecharge: 22000, manualWithdraw: 19500, updatedAt: "2026-04-18 18:09:44" },
-    { date: "2026-04-17", collectionIn: 356420.3, payoutOut: 281330.6, manualRecharge: 17000, manualWithdraw: 13200, updatedAt: "2026-04-17 18:06:14" },
-    { date: "2026-04-16", collectionIn: 318220.4, payoutOut: 259880.5, manualRecharge: 12000, manualWithdraw: 10000, updatedAt: "2026-04-16 18:03:18" },
+    { date: "2026-04-24", collectionIn: 385000.25, payoutOut: 301440.55, merchantFeeIncome: 18480.55, platformFeeExpense: 9220.2, manualRecharge: 25000, manualWithdraw: 18000, updatedAt: "2026-04-24 18:20:12" },
+    { date: "2026-04-23", collectionIn: 412340.2, payoutOut: 288110.8, merchantFeeIncome: 20112.4, platformFeeExpense: 10045.9, manualRecharge: 30000, manualWithdraw: 12000, updatedAt: "2026-04-23 18:16:02" },
+    { date: "2026-04-22", collectionIn: 368920.85, payoutOut: 295200.45, merchantFeeIncome: 17665.8, platformFeeExpense: 8840.25, manualRecharge: 18000, manualWithdraw: 26000, updatedAt: "2026-04-22 18:10:33" },
+    { date: "2026-04-21", collectionIn: 433210.3, payoutOut: 320100.95, merchantFeeIncome: 21920.15, platformFeeExpense: 10960.4, manualRecharge: 42000, manualWithdraw: 16500, updatedAt: "2026-04-21 18:08:41" },
+    { date: "2026-04-20", collectionIn: 295880.4, payoutOut: 274300.15, merchantFeeIncome: 15126.9, platformFeeExpense: 7608.3, manualRecharge: 15000, manualWithdraw: 21000, updatedAt: "2026-04-20 18:05:27" },
+    { date: "2026-04-19", collectionIn: 401500.6, payoutOut: 312800.5, merchantFeeIncome: 19340.65, platformFeeExpense: 9675.1, manualRecharge: 28000, manualWithdraw: 24000, updatedAt: "2026-04-19 18:11:50" },
+    { date: "2026-04-18", collectionIn: 389900.95, payoutOut: 305420.35, merchantFeeIncome: 18820.25, platformFeeExpense: 9412.45, manualRecharge: 22000, manualWithdraw: 19500, updatedAt: "2026-04-18 18:09:44" },
+    { date: "2026-04-17", collectionIn: 356420.3, payoutOut: 281330.6, merchantFeeIncome: 17120.4, platformFeeExpense: 8560.2, manualRecharge: 17000, manualWithdraw: 13200, updatedAt: "2026-04-17 18:06:14" },
+    { date: "2026-04-16", collectionIn: 318220.4, payoutOut: 259880.5, merchantFeeIncome: 15220.35, platformFeeExpense: 7610.15, manualRecharge: 12000, manualWithdraw: 10000, updatedAt: "2026-04-16 18:03:18" },
   ],
   walletLimitEditMode: false,
   pendingWalletLimitConfig: null,
@@ -652,8 +652,8 @@ function buildFundsSummaryRows(startDate, endDate) {
     .filter((item) => item.date >= startDate && item.date <= endDate)
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .map((item) => {
-      const totalIn = item.collectionIn + item.manualRecharge;
-      const totalOut = item.payoutOut + item.manualWithdraw;
+      const totalIn = item.collectionIn + item.manualRecharge + item.merchantFeeIncome;
+      const totalOut = item.payoutOut + item.manualWithdraw + item.platformFeeExpense;
       return {
         ...item,
         totalIn,
@@ -661,6 +661,16 @@ function buildFundsSummaryRows(startDate, endDate) {
         netAmount: totalIn - totalOut,
       };
     });
+}
+
+function getFundsSummaryFeeTotals() {
+  const merchantFeeIncome = store.fundsSummaryRows.reduce((sum, row) => sum + row.merchantFeeIncome, 0);
+  const platformFeeExpense = store.fundsSummaryRows.reduce((sum, row) => sum + row.platformFeeExpense, 0);
+  return {
+    merchantFeeIncome,
+    platformFeeExpense,
+    feeNetIncome: merchantFeeIncome - platformFeeExpense,
+  };
 }
 
 function initializeFundsOverview() {
@@ -897,6 +907,7 @@ function renderPlaceholderPage(title, description) {
 function renderFundsOverviewPage() {
   const totalDisplay = getFundsTotalBalanceDisplay();
   const totalError = totalDisplay === "--" ? "查询失败，请重新查询" : "";
+  const feeTotals = getFundsSummaryFeeTotals();
   return `
     <section class="card detail-card">
       <div class="detail-header funds-head">
@@ -964,6 +975,20 @@ function renderFundsOverviewPage() {
     </section>
     <section class="card table-card">
       <div class="section-title" style="margin-top:0;">每日资金汇总</div>
+      <div class="stats compact-stats">
+        <div class="card stat">
+          <strong>${formatMoney(feeTotals.merchantFeeIncome)}</strong>
+          <span>区间商户手续费收入</span>
+        </div>
+        <div class="card stat">
+          <strong>${formatMoney(feeTotals.platformFeeExpense)}</strong>
+          <span>区间平台手续费支出</span>
+        </div>
+        <div class="card stat">
+          <strong class="${feeTotals.feeNetIncome < 0 ? "amount-negative" : "amount-positive"}">${feeTotals.feeNetIncome < 0 ? "-" : ""}${formatMoney(Math.abs(feeTotals.feeNetIncome))}</strong>
+          <span>区间手续费净收入</span>
+        </div>
+      </div>
       ${
         store.fundsSummaryState === "error"
           ? `<div class="empty-note">查询失败，请重新查询</div>`
@@ -979,6 +1004,8 @@ function renderFundsOverviewPage() {
               <th class="align-right">净额</th>
               <th class="align-right">支付业务流入</th>
               <th class="align-right">支付业务流出</th>
+              <th class="align-right">商户手续费收入</th>
+              <th class="align-right">平台手续费支出</th>
               <th class="align-right">人工充值</th>
               <th class="align-right">人工提现</th>
               <th>统计更新时间</th>
@@ -995,6 +1022,8 @@ function renderFundsOverviewPage() {
                 <td class="align-right ${row.netAmount < 0 ? "amount-negative" : "amount-positive"}">${row.netAmount < 0 ? "-" : ""}${formatMoney(Math.abs(row.netAmount))}</td>
                 <td class="align-right">${formatMoney(row.collectionIn)}</td>
                 <td class="align-right">${formatMoney(row.payoutOut)}</td>
+                <td class="align-right">${formatMoney(row.merchantFeeIncome)}</td>
+                <td class="align-right">${formatMoney(row.platformFeeExpense)}</td>
                 <td class="align-right">${formatMoney(row.manualRecharge)}</td>
                 <td class="align-right">${formatMoney(row.manualWithdraw)}</td>
                 <td>${row.updatedAt}</td>
