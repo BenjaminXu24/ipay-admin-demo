@@ -3,6 +3,7 @@ const app = document.getElementById("app");
 const store = {
   openTabs: [
     { key: "dashboard", label: "首页信息" },
+    { key: "fundsOverview", label: "资金总览" },
     { key: "merchantList", label: "商户列表" },
     { key: "rechargeList", label: "充值列表" },
     { key: "userList", label: "用户管理" },
@@ -17,6 +18,28 @@ const store = {
     status: "approved",
     remark: "",
   },
+  fundsOverviewInitialized: false,
+  fundsBalanceQueryCount: 0,
+  fundsBalances: [],
+  fundsBalanceError: "",
+  fundsSummaryState: "normal",
+  fundsSummaryError: "",
+  fundsSummaryFilters: {
+    startDate: "2026-04-18",
+    endDate: "2026-04-24",
+  },
+  fundsSummaryRows: [],
+  fundsSummarySource: [
+    { date: "2026-04-24", collectionIn: 385000.25, payoutOut: 301440.55, manualRecharge: 25000, manualWithdraw: 18000, updatedAt: "2026-04-24 18:20:12" },
+    { date: "2026-04-23", collectionIn: 412340.2, payoutOut: 288110.8, manualRecharge: 30000, manualWithdraw: 12000, updatedAt: "2026-04-23 18:16:02" },
+    { date: "2026-04-22", collectionIn: 368920.85, payoutOut: 295200.45, manualRecharge: 18000, manualWithdraw: 26000, updatedAt: "2026-04-22 18:10:33" },
+    { date: "2026-04-21", collectionIn: 433210.3, payoutOut: 320100.95, manualRecharge: 42000, manualWithdraw: 16500, updatedAt: "2026-04-21 18:08:41" },
+    { date: "2026-04-20", collectionIn: 295880.4, payoutOut: 274300.15, manualRecharge: 15000, manualWithdraw: 21000, updatedAt: "2026-04-20 18:05:27" },
+    { date: "2026-04-19", collectionIn: 401500.6, payoutOut: 312800.5, manualRecharge: 28000, manualWithdraw: 24000, updatedAt: "2026-04-19 18:11:50" },
+    { date: "2026-04-18", collectionIn: 389900.95, payoutOut: 305420.35, manualRecharge: 22000, manualWithdraw: 19500, updatedAt: "2026-04-18 18:09:44" },
+    { date: "2026-04-17", collectionIn: 356420.3, payoutOut: 281330.6, manualRecharge: 17000, manualWithdraw: 13200, updatedAt: "2026-04-17 18:06:14" },
+    { date: "2026-04-16", collectionIn: 318220.4, payoutOut: 259880.5, manualRecharge: 12000, manualWithdraw: 10000, updatedAt: "2026-04-16 18:03:18" },
+  ],
   walletLimitEditMode: false,
   pendingWalletLimitConfig: null,
   walletLimitConfig: [
@@ -491,6 +514,7 @@ const store = {
 
 const routes = {
   dashboard: { title: "首页信息", crumbs: ["首页信息"] },
+  fundsOverview: { title: "资金总览", crumbs: ["资金总览"] },
   merchantList: { title: "商户管理", crumbs: ["商户管理", "商户列表"] },
   merchantDetail: { title: "商户详情", crumbs: ["商户管理", "商户详情"] },
   merchantApplicationList: { title: "申请记录", crumbs: ["商户管理", "商户详情", "申请记录"] },
@@ -599,6 +623,67 @@ function getNowString() {
   return "2026-04-23 15:20:00";
 }
 
+function getFundsRefreshTime() {
+  const minute = 12 + store.fundsBalanceQueryCount * 3;
+  return `2026-04-24 10:${String(minute).padStart(2, "0")}:18`;
+}
+
+function buildFundsBalanceCards(mode = "success") {
+  const updatedAt = getFundsRefreshTime();
+  const cards = [
+    { key: "netbank", label: "Netbank余额", amount: 425000.35, currency: "PHP", status: "success", updatedAt, errorText: "" },
+    { key: "starpay", label: "StarPay余额", amount: 318440.8, currency: "PHP", status: "success", updatedAt, errorText: "" },
+    { key: "coins", label: "Coins余额", amount: 286210.55, currency: "PHP", status: "success", updatedAt, errorText: "" },
+  ];
+
+  if (mode === "partial-error") {
+    cards[2] = { ...cards[2], amount: null, status: "error", errorText: "查询失败，请重新查询" };
+  }
+
+  if (mode === "full-error") {
+    return cards.map((card) => ({ ...card, amount: null, status: "error", errorText: "查询失败，请重新查询" }));
+  }
+
+  return cards;
+}
+
+function buildFundsSummaryRows(startDate, endDate) {
+  return store.fundsSummarySource
+    .filter((item) => item.date >= startDate && item.date <= endDate)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .map((item) => {
+      const totalIn = item.collectionIn + item.manualRecharge;
+      const totalOut = item.payoutOut + item.manualWithdraw;
+      return {
+        ...item,
+        totalIn,
+        totalOut,
+        netAmount: totalIn - totalOut,
+      };
+    });
+}
+
+function initializeFundsOverview() {
+  if (store.fundsOverviewInitialized) return;
+  store.fundsOverviewInitialized = true;
+  store.fundsBalanceQueryCount = 1;
+  store.fundsBalances = buildFundsBalanceCards();
+  store.fundsBalanceError = "";
+  store.fundsSummaryRows = buildFundsSummaryRows(
+    store.fundsSummaryFilters.startDate,
+    store.fundsSummaryFilters.endDate
+  );
+  store.fundsSummaryState = store.fundsSummaryRows.length ? "normal" : "empty";
+  store.fundsSummaryError = "";
+}
+
+function getFundsTotalBalanceDisplay() {
+  if (!store.fundsBalances.length || store.fundsBalances.some((item) => item.status === "error")) {
+    return "--";
+  }
+  return formatMoney(store.fundsBalances.reduce((sum, item) => sum + item.amount, 0));
+}
+
 function generateApplicationId() {
   const nextIndex = store.applicationRequests.length + 1;
   return `AR20260423${String(nextIndex).padStart(4, "0")}`;
@@ -683,6 +768,12 @@ function renderSidebar() {
         </div>
       </div>
       <div class="nav-group">
+        <div class="nav-group-title">资金管理 <small>⌄</small></div>
+        <div class="nav-items">
+          <a class="nav-item ${store.route.name === "fundsOverview" ? "active" : ""}" href="#fundsOverview">资金总览</a>
+        </div>
+      </div>
+      <div class="nav-group">
         <div class="nav-group-title">交易管理 <small>⌄</small></div>
         <div class="nav-items">
           <a class="nav-item ${store.route.name === "rechargeList" ? "active" : ""}" href="#rechargeList">充值列表</a>
@@ -762,6 +853,9 @@ function renderTabs() {
 
 function renderPage() {
   switch (store.route.name) {
+    case "fundsOverview":
+      initializeFundsOverview();
+      return renderFundsOverviewPage();
     case "merchantList":
       return renderMerchantListPage();
     case "merchantDetail":
@@ -796,6 +890,120 @@ function renderPlaceholderPage(title, description) {
         </div>
       </div>
       <p class="empty-note">${description}</p>
+    </section>
+  `;
+}
+
+function renderFundsOverviewPage() {
+  const totalDisplay = getFundsTotalBalanceDisplay();
+  const totalError = totalDisplay === "--" ? "查询失败，请重新查询" : "";
+  return `
+    <section class="card detail-card">
+      <div class="detail-header funds-head">
+        <div class="title-block">
+          <h1>资金总览</h1>
+          <div class="page-note">查看 Netbank、StarPay、Coins 当前余额及 iPay 每日资金流入流出汇总</div>
+        </div>
+        <div class="action-row" style="margin:0;">
+          <button class="btn primary" data-refresh-funds-balance="1">刷新余额</button>
+        </div>
+      </div>
+      <div class="balance-grid">
+        <div class="balance-card total ${totalError ? "error" : ""}">
+          <div class="balance-topline">
+            <span>iPay总余额</span>
+            <span>PHP</span>
+          </div>
+          <div class="balance-amount">${totalDisplay}</div>
+          <div class="balance-meta">
+            <span>${store.fundsBalances[0]?.updatedAt || "-"}</span>
+            ${totalError ? `<span class="status rejected">查询失败，请重新查询</span>` : `<span class="status approved">查询成功</span>`}
+          </div>
+        </div>
+        ${store.fundsBalances
+          .map(
+            (item) => `
+          <div class="balance-card ${item.status === "error" ? "error" : ""}">
+            <div class="balance-topline">
+              <span>${item.label}</span>
+              <span>${item.currency}</span>
+            </div>
+            <div class="balance-amount">${item.status === "error" ? "--" : formatMoney(item.amount)}</div>
+            <div class="balance-meta">
+              <span>最后更新时间：${item.updatedAt}</span>
+              ${
+                item.status === "error"
+                  ? `<span class="status rejected">查询失败，请重新查询</span>`
+                  : `<span class="status approved">查询成功</span>`
+              }
+            </div>
+          </div>`
+          )
+          .join("")}
+      </div>
+    </section>
+    <section class="card toolbar-card">
+      <form id="fundsSummaryQueryForm">
+        <div class="filters funds-filters">
+          <div class="field">
+            <label>开始日期</label>
+            <input type="date" name="startDate" value="${store.fundsSummaryFilters.startDate}" />
+          </div>
+          <div class="field">
+            <label>结束日期</label>
+            <input type="date" name="endDate" value="${store.fundsSummaryFilters.endDate}" />
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn primary" type="submit">查询</button>
+          <button class="btn ghost" type="button" data-reset-funds-summary="1">重置</button>
+          <button class="btn ghost" type="button" data-export-funds-summary="1">导出</button>
+          <span id="fundsSummaryError" class="error-text">${store.fundsSummaryError || ""}</span>
+        </div>
+      </form>
+    </section>
+    <section class="card table-card">
+      <div class="section-title" style="margin-top:0;">每日资金汇总</div>
+      ${
+        store.fundsSummaryState === "error"
+          ? `<div class="empty-note">查询失败，请重新查询</div>`
+          : store.fundsSummaryState === "empty"
+            ? `<div class="empty-note">当前时间范围内暂无数据</div>`
+            : `
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th class="align-right">总流入</th>
+              <th class="align-right">总流出</th>
+              <th class="align-right">净额</th>
+              <th class="align-right">支付业务流入</th>
+              <th class="align-right">支付业务流出</th>
+              <th class="align-right">人工充值</th>
+              <th class="align-right">人工提现</th>
+              <th>统计更新时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${store.fundsSummaryRows
+              .map(
+                (row) => `
+              <tr>
+                <td>${row.date}</td>
+                <td class="align-right">${formatMoney(row.totalIn)}</td>
+                <td class="align-right">${formatMoney(row.totalOut)}</td>
+                <td class="align-right ${row.netAmount < 0 ? "amount-negative" : "amount-positive"}">${row.netAmount < 0 ? "-" : ""}${formatMoney(Math.abs(row.netAmount))}</td>
+                <td class="align-right">${formatMoney(row.collectionIn)}</td>
+                <td class="align-right">${formatMoney(row.payoutOut)}</td>
+                <td class="align-right">${formatMoney(row.manualRecharge)}</td>
+                <td class="align-right">${formatMoney(row.manualWithdraw)}</td>
+                <td>${row.updatedAt}</td>
+              </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>`
+      }
     </section>
   `;
 }
@@ -2213,6 +2421,76 @@ function applyApplicationEffect(item) {
 }
 
 function bindEvents() {
+  document.querySelectorAll("[data-refresh-funds-balance]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.fundsBalanceQueryCount += 1;
+      store.fundsBalances = buildFundsBalanceCards();
+      store.fundsBalanceError = "";
+      store.flash = "平台余额已刷新。";
+      render();
+    });
+  });
+
+  const fundsSummaryQueryForm = document.getElementById("fundsSummaryQueryForm");
+  if (fundsSummaryQueryForm) {
+    fundsSummaryQueryForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(fundsSummaryQueryForm);
+      const startDate = String(formData.get("startDate") || "").trim();
+      const endDate = String(formData.get("endDate") || "").trim();
+      const errorNode = document.getElementById("fundsSummaryError");
+      if (errorNode) errorNode.textContent = "";
+
+      if (!startDate) {
+        if (errorNode) errorNode.textContent = "开始日期不能为空";
+        return;
+      }
+      if (!endDate) {
+        if (errorNode) errorNode.textContent = "结束日期不能为空";
+        return;
+      }
+      if (startDate > endDate) {
+        if (errorNode) errorNode.textContent = "开始日期不能晚于结束日期";
+        return;
+      }
+
+      const dayDiff = (new Date(`${endDate}T00:00:00`) - new Date(`${startDate}T00:00:00`)) / (1000 * 60 * 60 * 24);
+      if (dayDiff > 90) {
+        if (errorNode) errorNode.textContent = "日期范围不能超过 90 天";
+        return;
+      }
+
+      store.fundsSummaryFilters = { startDate, endDate };
+      store.fundsSummaryRows = buildFundsSummaryRows(startDate, endDate);
+      store.fundsSummaryState = store.fundsSummaryRows.length ? "normal" : "empty";
+      store.fundsSummaryError = "";
+      render();
+    });
+  }
+
+  document.querySelectorAll("[data-reset-funds-summary]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.fundsSummaryFilters = {
+        startDate: "2026-04-18",
+        endDate: "2026-04-24",
+      };
+      store.fundsSummaryRows = buildFundsSummaryRows(
+        store.fundsSummaryFilters.startDate,
+        store.fundsSummaryFilters.endDate
+      );
+      store.fundsSummaryState = store.fundsSummaryRows.length ? "normal" : "empty";
+      store.fundsSummaryError = "";
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-export-funds-summary]").forEach((button) => {
+    button.addEventListener("click", () => {
+      store.flash = `已按 ${store.fundsSummaryFilters.startDate} 至 ${store.fundsSummaryFilters.endDate} 的条件导出每日资金汇总。`;
+      render();
+    });
+  });
+
   document.querySelectorAll("[data-view-user]").forEach((button) => {
     button.addEventListener("click", () => {
       navigate(`users/${button.dataset.viewUser}`, { userTab: "profile" });

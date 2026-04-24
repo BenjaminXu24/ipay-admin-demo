@@ -271,6 +271,69 @@ textarea {
   border-color: #ffd0d5;
 }
 
+.page-note {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.funds-head {
+  margin-bottom: 22px;
+}
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.balance-card {
+  border: 1px solid #e7edf4;
+  border-radius: 12px;
+  padding: 18px;
+  background: #fff;
+  min-width: 0;
+}
+
+.balance-card.total {
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+  border-color: #fbc79d;
+}
+
+.balance-card.error {
+  background: #fffaf9;
+  border-color: #ffd7d7;
+}
+
+.balance-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #68707c;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.balance-amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.balance-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.funds-filters {
+  grid-template-columns: repeat(2, minmax(180px, 260px));
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -305,6 +368,20 @@ td {
   text-align: left;
   font-size: 14px;
   vertical-align: top;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.amount-positive {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.amount-negative {
+  color: var(--danger);
+  font-weight: 700;
 }
 
 th {
@@ -720,6 +797,10 @@ th {
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .balance-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
@@ -734,6 +815,11 @@ th {
   .filters,
   .form-grid,
   .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .balance-grid,
+  .funds-filters {
     grid-template-columns: 1fr;
   }
 
