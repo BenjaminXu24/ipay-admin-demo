@@ -346,6 +346,63 @@ textarea {
   margin: 12px 0 18px;
 }
 
+.platform-fee-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.platform-fee-card {
+  text-align: left;
+}
+
+.platform-fee-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  color: #64748b;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.tooltip-anchor {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff7ed;
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: default;
+}
+
+.tooltip-card {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: 240px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.6;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+  z-index: 3;
+}
+
+.tooltip-anchor:hover .tooltip-card {
+  opacity: 1;
+  visibility: visible;
+}
+
 .stat {
   padding: 20px;
   text-align: center;
